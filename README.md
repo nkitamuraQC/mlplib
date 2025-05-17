@@ -21,3 +21,5 @@ git clone https://github.com/nkitamuraQC/mlplib.git
 cd mlplib
 pip install -r requirements.txt
 ```
+- Optional
+  - Setting of PYTHONPATH 

@@ -19,10 +19,9 @@ class PhononCalculator:
         self.supercell_matrix = [[2, 0, 0], [0, 2, 0], [0, 0, 2]]
         self.force_constants = force_constants
         self.distance = 0.03
-
-        self.len_supercell = []
-        self.symbols = []
-        self.positions = []
+        
+        self.symbols = None
+        self.positions = None
         self.cell_param = None
         self.ase_atoms = None
         self.forces_save = None
@@ -55,26 +54,25 @@ class PhononCalculator:
         self.phonon = Phonopy(self.structure, self.supercell_matrix)
         if self.force_constants is not None:
             self.phonon.set_force_constants(self.force_constants)
-
+        self.forces_save = []
         self.phonon.generate_displacements(distance=self.distance)
         supercells = self.phonon.supercells_with_displacements
         self.cell_param = supercells[0].get_cell() * np.array(self.supercell_matrix)
         for supercell in supercells:
-            self.symbols += supercell.symbols
-            pos = supercell.get_positions()
-            self.positions.append(pos)
-            self.len_supercell.append(len(supercell))
-        self.ase_atoms = Atoms(symbols=self.symbols, positions=self.positions, cell=self.cell_param, pbc=True)
-        ocp = get_mlp_calculator()
-        self.ase_atoms.calc = EquiformerWithStress(ocp)
-        e = self.ase_atoms.get_potential_energy()
-        forces = self.ase_atoms.get_forces()
-        stress = self.ase_atoms.get_stress()
-        print("Energy:", e)
-        print("Forces:", forces)
-        print("Stress:", stress)
+            self.symbols = supercell.symbols
+            self.positions = supercell.get_positions()
+            self.ase_atoms = Atoms(symbols=self.symbols, positions=self.positions, cell=self.cell_param, pbc=True)
+            ocp = get_mlp_calculator()
+            self.ase_atoms.calc = EquiformerWithStress(ocp)
+            e = self.ase_atoms.get_potential_energy()
+            forces = self.ase_atoms.get_forces()
+            stress = self.ase_atoms.get_stress()
+            print("Energy:", e)
+            print("Forces:", forces)
+            print("Stress:", stress)
+            self.forces_save.append(forces)
 
-        self.arrange_forces(forces)
+        # self.arrange_forces(forces)
         self.phonon.forces = self.forces_save
         self.phonon.dataset = self.phonon.displacement_dataset
         self.phonon.produce_force_constants()

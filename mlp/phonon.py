@@ -62,12 +62,14 @@ class PhononCalculator:
         self.phonon.generate_displacements(distance=self.distance)
         supercells = self.phonon.supercells_with_displacements
         self.cell_param = supercells[0].get_cell() * np.array(self.supercell_matrix)
+        ocp = get_mlp_calculator()
+        eqcalc = EquiformerWithStress(ocp)
         for supercell in supercells:
             self.symbols = supercell.symbols
             self.positions = supercell.get_positions()
             self.ase_atoms = Atoms(symbols=self.symbols, positions=self.positions, cell=self.cell_param, pbc=True)
-            ocp = get_mlp_calculator()
-            self.ase_atoms.calc = EquiformerWithStress(ocp)
+
+            self.ase_atoms.calc = eqcalc
             e = self.ase_atoms.get_potential_energy()
             forces = self.ase_atoms.get_forces()
             stress = self.ase_atoms.get_stress()

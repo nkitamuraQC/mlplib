@@ -14,4 +14,6 @@ def test_run_mlp_phonon():
     return
 
 if __name__ == "__main__":
-    test_run_mlp_opt()
+    # test_run_mlp_opt()
+    test_run_mlp_phonon()
+    

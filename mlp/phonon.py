@@ -53,6 +53,18 @@ class PhononCalculator:
         self.phonon = Phonopy.load(phonopy_save)
         return
 
+    def load_ph3(self, phonopy_save):
+        from phono3py.interface.phono3py_yaml import Phono3pyYaml
+        ph3yml = Phono3pyYaml()
+        ph3yml.read("phono3py_disp.yaml")
+        disp_dataset = ph3yml.dataset
+        ph3 = Phono3py(unitcell, supercell_matrix=ph3yml.supercell_matrix, primitive_matrix=ph3yml.primitive_matrix)
+        forces = np.loadtxt("FORCES_FC3").reshape(-1, len(ph3.supercell), 3)
+        ph3.dataset = disp_dataset
+        ph3.forces = forces
+        self.phonon = ph3
+        return
+
     def calculate_phonons(self):
         """
         Calculate phonons using the provided crystal structure and supercell matrix.
@@ -90,7 +102,10 @@ class PhononCalculator:
         # self.arrange_forces(forces)
         self.phonon.forces = self.forces_save
         self.phonon.dataset = self.phonon.displacement_dataset
-        self.phonon.produce_force_constants()
+        if not use_ph3:
+            self.phonon.produce_force_constants()
+        else:
+            self.phonon.produce_fc3()
         self.phonon.save(filename=self.phonopy_save, settings={'force_constants': True})
         return
 

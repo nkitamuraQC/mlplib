@@ -131,3 +131,11 @@ class PhononCalculator:
         self.phonon.run_projected_dos()
         self.phonon.plot_band_structure_and_dos(pdos_indices=[[0], [1]]).show()
         return 
+
+    def get_phph_int(self):
+        if not use_ph3:
+            raise NotImplementedError
+        self.phonon.init_phph_interaction()
+        self.phonon.run_thermal_conductivity()
+        return
+

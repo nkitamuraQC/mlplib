@@ -82,7 +82,7 @@ class PhononCalculator:
         self.phonon.forces = self.forces_save
         self.phonon.dataset = self.phonon.displacement_dataset
         self.phonon.produce_force_constants()
-        self.phonon.save(filename=self.phonopy_save)
+        self.phonon.save(filename=self.phonopy_save, settings={'force_constants': True})
         return
 
     def get_phonon_band_structure(self, path:list[list[float]], labels:list[str], mesh:list[int]):

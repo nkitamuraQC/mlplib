@@ -1,1 +1,13 @@
-
+numpy
+scipy
+ase
+fairchem-core
+pymatgen
+pandas
+scikit-learn
+pytest
+periodictable
+torch_geometric
+torch
+torch-scatter
+torch-sparse

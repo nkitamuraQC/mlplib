@@ -5,7 +5,7 @@ from pymatgen.core import Structure
 import periodictable
 import numpy as np
 import pathlib
-from becmlp.mlp.job_cryspy import script_qe, script_ase
+from becmlp.mlp.job_cryspy import script_qe, script_mlp
 
 
 def get_section(myclass):
@@ -13,6 +13,7 @@ def get_section(myclass):
         "[basic]": [
             "algo",
             "tot_struc",
+            "calc_code",
             "nstage",
             "njob",
             "jobcmd",
@@ -80,17 +81,20 @@ class DoCryspy:
             self.prefix = self.qe_ctrl.prefix
         self.algo = "RS"
         self.calc_code = "ASE"
-        self.tot_struc = 100
-        self.nstage = 20
-        self.njob = 1
-        self.jobcmd = "bash"
+        self.tot_struc = 10
+        self.nstage = 1
+        self.njob = 2
+        self.jobcmd = "zsh"
         self.jobfile = "job_cryspy"
 
         self.struc_mode = "crystal"
-        self.natot = 9
-        self.atype = "Bi Ti F"
-        self.nat = "1 1 7"
+        self.natot = 2
+        self.atype = "Fe Se"
+        self.nat = "1 1"
         self.ase_python = "ase_in.py"
+        self.qe_infile = "calculation.in"
+        self.qe_outfile = "calculation.out"
+        self.pv_term = False
 
         self.kppvol = "40"
         self.qe_infile = f"{self.prefix}.in"
@@ -111,8 +115,7 @@ class DoCryspy:
 
         self.nselect_laqa = 5
         self.mpi = 1
-        
-        pathlib.Path("calc_in").mkdir(exist_ok=True)
+        self.max_job = 10
     
 
     def make_cryspy(self, txt=""):
@@ -127,13 +130,16 @@ class DoCryspy:
 
     def write_mlp(self):
         from becmlp.mlp.script import script
-        fname = f"./calc_in/{self.ase_python}_1"
+        for i in range(1, self.max_job+1):
+            if not os.path.exists(f"./calc_in/{self.ase_python}_{i}"):
+                break
+        fname = f"./calc_in/{self.ase_python}_{i}"
         wf = open(fname, "w")
         wf.write(script)
         wf.close()
 
         wf = open(f"./calc_in/{self.jobfile}", "w")
-        wf.write(script_ase)
+        wf.write(script_mlp)
         wf.close()
         return
 
@@ -151,7 +157,6 @@ class DoCryspy:
 
     
     def write_qe(self):
-        os.chdir("./calc_in")
         self.qe_ctrl.calculation = "relax"
         inp = self.qe_ctrl.make_input_for_cryspy()
         self.qe_ctrl.write_input4cryspy(inp, 1)
@@ -159,11 +164,10 @@ class DoCryspy:
         self.qe_ctrl.calculation = "vc-relax"
         inp = self.qe_ctrl.make_input_for_cryspy()
         self.qe_ctrl.write_input4cryspy(inp, 2)
-
-        os.chdir("..")
         return
 
     def exec_qe(self):
+        pathlib.Path("calc_in").mkdir(exist_ok=True)
         inp = self.make_cryspy()
         self.write_cryspy(inp)
         self.write_job_cryspy()
@@ -172,11 +176,23 @@ class DoCryspy:
         return
 
     def exec_mlp(self):
+        pathlib.Path("calc_in").mkdir(exist_ok=True)
         inp = self.make_cryspy()
         self.write_cryspy(inp)
         # self.write_job_cryspy()
         self.write_mlp()
         os.system("cryspy")
+        return
+    
+    def rm_lock(self):
+        if os.path.exists("lock_cryspy"):
+            os.remove("lock_cryspy")
+        if os.path.exists("log_cryspy"):
+            os.remove("log_cryspy")
+        if os.path.exists("cryspy.stat"):
+            os.remove("cryspy.stat")
+        os.system("rm -r calc_in")
+        os.system("rm -r data")
         return
 
     def __len__(self):

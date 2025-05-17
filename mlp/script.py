@@ -1,10 +1,11 @@
 script="""
-from ase.constraints import ExpCellFilter, StrainFilter
+# from ase.constraints import ExpCellFilter, StrainFilter
+from ase.filters import UnitCellFilter
 from ase.calculators.emt import EMT
 from ase.calculators.lj import LennardJones
 from ase.optimize.sciopt import SciPyFminCG
 from ase.optimize import BFGS
-from ase.spacegroup.symmetrize import FixSymmetry
+# from ase.spacegroup.symmetrize import FixSymmetry
 import numpy as np
 from ase.io import read, write
 
@@ -22,7 +23,7 @@ def get_mlp_calculator():
     return calc
 
 def compute_virial_stress_from_ase(atoms: Atoms, forces: np.ndarray) -> np.ndarray:
-    """
+    '''
     ASEのAtomsオブジェクトとforcesからVirial stress tensorを計算する
 
     Parameters:
@@ -31,7 +32,7 @@ def compute_virial_stress_from_ase(atoms: Atoms, forces: np.ndarray) -> np.ndarr
 
     Returns:
         stress_tensor: (3, 3) numpy array of stress tensor [eV/Å^3]
-    """
+    '''
     positions = atoms.get_positions()  # shape: (N, 3)
     volume = atoms.get_volume()
 
@@ -76,8 +77,9 @@ atoms = read('POSCAR', format='vasp')
 # ---------- setting and run
 ocp = get_mlp_calculator()
 atoms.calc = EquiformerWithStress(ocp)
-atoms.set_constraint([FixSymmetry(atoms)])
-atoms = ExpCellFilter(atoms, hydrostatic_strain=False)
+# atoms.set_constraint([FixSymmetry(atoms)])
+# atoms = ExpCellFilter(atoms, hydrostatic_strain=False)
+atoms = UnitCellFilter(atoms, hydrostatic_strain=False)
 opt = BFGS(atoms)
 #opt=SciPyFminCG(atoms)
 opt.run()

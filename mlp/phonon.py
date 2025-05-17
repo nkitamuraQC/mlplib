@@ -6,6 +6,7 @@ from ase import Atoms
 from mlplib.mlp.make_calc import get_mlp_calculator, EquiformerWithStress
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from ase.io import read, write
+from phono3py import Phono3py
 
 class PhononCalculator:
     def __init__(self, structure_file, force_constants=None):
@@ -23,6 +24,7 @@ class PhononCalculator:
         self.supercell_matrix = [[2, 0, 0], [0, 2, 0], [0, 0, 2]]
         self.force_constants = force_constants
         self.distance = 0.03
+        self.use_ph3 = False
         
         self.symbols = None
         self.positions = None
@@ -55,7 +57,14 @@ class PhononCalculator:
         """
         Calculate phonons using the provided crystal structure and supercell matrix.
         """
-        self.phonon = Phonopy(self.structure[0], self.supercell_matrix)
+        if not use_ph3:
+            self.phonon = Phonopy(self.structure[0], self.supercell_matrix)
+        else:
+            self.phonon = Phono3py(
+                self.structure[0], 
+                supercell_matrix=self.supercell_matrix, 
+                primitive_matrix='auto'
+            )
         if self.force_constants is not None:
             self.phonon.set_force_constants(self.force_constants)
         self.forces_save = []

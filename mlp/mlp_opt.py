@@ -49,6 +49,21 @@ class MLPOpt:
     def write_cif(self, atoms):
         atoms.write(self.output_cif, format='cif')
         return
+
+    def get_props(self):
+        self.read_cif()
+        self.assin_calc()
+        energy = atoms.get_potential_energy()
+        print(f'Potential energy: {energy:.6f} eV')
+
+        # 原子ごとのフォース（N原子 x 3成分）
+        forces = atoms.get_forces()
+        print(f'Forces:\n{forces}')
+
+        # 応力テンソル（3x3 行列）単位：eV/Å^3
+        stress = atoms.get_stress(voigt=False)
+        print(f'Stress tensor (3x3):\n{stress}')
+        return energy, forces, stress
     
     def initialize_velocities(self):
         masses_me = self.atoms.get_masses() * self.amu_to_me

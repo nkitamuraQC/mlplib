@@ -5,7 +5,7 @@ from pymatgen.core import Structure
 import periodictable
 import numpy as np
 import pathlib
-from becmlp.mlp.job_cryspy import script_qe, script_mlp
+from mlplib.mlp.job_cryspy import script_qe, script_mlp
 
 
 def get_section(myclass):

@@ -1,4 +1,4 @@
-from becmlp.mlp.make_calc import get_mlp_calculator, EquiformerWithStress, compute_virial_stress_from_ase
+from mlplib.mlp.make_calc import get_mlp_calculator, EquiformerWithStress, compute_virial_stress_from_ase
 from ase.io import read, write
 import numpy as np
 from scipy.optimize import minimize

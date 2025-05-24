@@ -11,3 +11,6 @@ torch_geometric
 torch
 torch-scatter
 torch-sparse
+phonopy
+phono3py
+matplotlib

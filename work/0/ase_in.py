@@ -82,7 +82,7 @@ atoms.calc = EquiformerWithStress(ocp)
 atoms = UnitCellFilter(atoms, hydrostatic_strain=False)
 opt = BFGS(atoms)
 #opt=SciPyFminCG(atoms)
-opt.run()
+opt.run(fmax=0.01, steps=500)
 
 # ---------- opt. structure and energy
 # [rule in ASE interface]

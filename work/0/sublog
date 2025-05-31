@@ -274,3 +274,5 @@ BFGS:  108 21:34:06       17.158915      129.220698
 BFGS:  109 21:34:07       18.263115       74.615930
 BFGS:  110 21:34:08       19.100677       69.779443
 BFGS:  111 21:34:09       18.655905      107.642644
+/Users/qclove00/miniforge3/envs/mlplib_env/lib/python3.9/multiprocessing/resource_tracker.py:216: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

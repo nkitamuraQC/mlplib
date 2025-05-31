@@ -14,6 +14,8 @@ def test_cryspy():
     dc.natot = 3
     dc.atype = "Bi Ti F"
     dc.nat = "1 1 1"
+    dc.tot_struc = 10
+    dc.njob = 1
     dc.exec_mlp()
     return
 

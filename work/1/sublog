@@ -1,0 +1,165 @@
+/Users/qclove00/miniforge3/envs/mlplib_env/lib/python3.9/site-packages/fairchem/core/models/scn/spherical_harmonics.py:23: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  _Jd = torch.load(os.path.join(os.path.dirname(__file__), "Jd.pt"))
+/Users/qclove00/miniforge3/envs/mlplib_env/lib/python3.9/site-packages/fairchem/core/models/escn/so3.py:23: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  _Jd = torch.load(os.path.join(os.path.dirname(__file__), "Jd.pt"))
+/Users/qclove00/miniforge3/envs/mlplib_env/lib/python3.9/site-packages/fairchem/core/models/equiformer_v2/wigner.py:10: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  _Jd = torch.load(os.path.join(os.path.dirname(__file__), "Jd.pt"))
+INFO:root:Checking local cache: pretrained_models for model EquiformerV2-31M-S2EF-OC20-All+MD
+/Users/qclove00/miniforge3/envs/mlplib_env/lib/python3.9/site-packages/fairchem/core/common/relaxation/ase_utils.py:200: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(checkpoint_path, map_location=torch.device("cpu"))
+WARNING:root:Detected old config, converting to new format. Consider updating to avoid potential incompatibilities.
+INFO:root:amp: true
+cmd:
+  checkpoint_dir: /Users/qclove00/Desktop/mlplib/work/1/checkpoints/2025-05-31-21-33-04
+  commit: core:None,experimental:NA
+  identifier: ''
+  logs_dir: /Users/qclove00/Desktop/mlplib/work/1/logs/wandb/2025-05-31-21-33-04
+  print_every: 100
+  results_dir: /Users/qclove00/Desktop/mlplib/work/1/results/2025-05-31-21-33-04
+  seed: null
+  timestamp_id: 2025-05-31-21-33-04
+  version: ''
+dataset:
+  format: trajectory_lmdb_v2
+  grad_target_mean: 0.0
+  grad_target_std: 2.887317180633545
+  key_mapping:
+    force: forces
+    y: energy
+  normalize_labels: true
+  target_mean: -0.7554450631141663
+  target_std: 2.887317180633545
+  transforms:
+    normalizer:
+      energy:
+        mean: -0.7554450631141663
+        stdev: 2.887317180633545
+      forces:
+        mean: 0.0
+        stdev: 2.887317180633545
+evaluation_metrics:
+  metrics:
+    energy:
+    - mae
+    forces:
+    - forcesx_mae
+    - forcesy_mae
+    - forcesz_mae
+    - mae
+    - cosine_similarity
+    - magnitude_error
+    misc:
+    - energy_forces_within_threshold
+  primary_metric: forces_mae
+gp_gpus: null
+gpus: 0
+logger: wandb
+loss_functions:
+- energy:
+    coefficient: 4
+    fn: mae
+- forces:
+    coefficient: 100
+    fn: l2mae
+model:
+  alpha_drop: 0.1
+  attn_activation: silu
+  attn_alpha_channels: 64
+  attn_hidden_channels: 64
+  attn_value_channels: 16
+  distance_function: gaussian
+  drop_path_rate: 0.1
+  edge_channels: 128
+  ffn_activation: silu
+  ffn_hidden_channels: 128
+  grid_resolution: 18
+  lmax_list:
+  - 4
+  max_neighbors: 20
+  max_num_elements: 90
+  max_radius: 12.0
+  mmax_list:
+  - 2
+  name: equiformer_v2
+  norm_type: layer_norm_sh
+  num_distance_basis: 512
+  num_heads: 8
+  num_layers: 8
+  num_sphere_samples: 128
+  otf_graph: true
+  proj_drop: 0.0
+  regress_forces: true
+  sphere_channels: 128
+  use_atom_edge_embedding: true
+  use_gate_act: false
+  use_grid_mlp: true
+  use_pbc: true
+  use_s2_act_attn: false
+  weight_init: uniform
+optim:
+  batch_size: 8
+  clip_grad_norm: 100
+  ema_decay: 0.999
+  energy_coefficient: 4
+  eval_batch_size: 8
+  eval_every: 10000
+  force_coefficient: 100
+  grad_accumulation_steps: 1
+  load_balancing: atoms
+  loss_energy: mae
+  loss_force: l2mae
+  lr_initial: 0.0004
+  max_epochs: 3
+  num_workers: 8
+  optimizer: AdamW
+  optimizer_params:
+    weight_decay: 0.001
+  scheduler: LambdaLR
+  scheduler_params:
+    epochs: 1009275
+    lambda_type: cosine
+    lr: 0.0004
+    lr_min_factor: 0.01
+    warmup_epochs: 3364.25
+    warmup_factor: 0.2
+outputs:
+  energy:
+    level: system
+  forces:
+    eval_on_free_atoms: true
+    level: atom
+    train_on_free_atoms: true
+relax_dataset: {}
+slurm:
+  additional_parameters:
+    constraint: volta32gb
+  cpus_per_task: 9
+  folder: /checkpoint/abhshkdz/open-catalyst-project/logs/equiformer_v2/8307793
+  gpus_per_node: 8
+  job_id: '8307793'
+  job_name: eq2s_051701_allmd
+  mem: 480GB
+  nodes: 8
+  ntasks_per_node: 8
+  partition: learnaccel
+  time: 4320
+task:
+  dataset: trajectory_lmdb_v2
+  eval_on_free_atoms: true
+  grad_input: atomic forces
+  labels:
+  - potential energy
+  primary_metric: forces_mae
+  train_on_free_atoms: true
+test_dataset: {}
+trainer: ocp
+val_dataset: {}
+
+INFO:root:Loading model: equiformer_v2
+WARNING:root:equiformer_v2 (EquiformerV2) class is deprecated in favor of equiformer_v2_backbone_and_heads  (EquiformerV2BackboneAndHeads)
+INFO:root:Loaded EquiformerV2 with 31058690 parameters.
+INFO:root:Loading checkpoint in inference-only mode, not loading keys associated with trainer state!
+/Users/qclove00/miniforge3/envs/mlplib_env/lib/python3.9/site-packages/fairchem/core/modules/normalization/normalizer.py:69: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  "mean": torch.tensor(state_dict["mean"]),
+      Step     Time          Energy          fmax
+BFGS:    0 21:32:38        6.274197        0.037590

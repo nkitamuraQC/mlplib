@@ -1,4 +1,4 @@
-from becmlp.mlp.mlp_opt import MLPOpt
+from mlplib.mlp.mlp_opt import MLPOpt
 
 def run_mlp_opt_simple(cifname, nstep=10, press=0, conv_thr_force=1e-2, conv_thr_stress=1e-4, paxis=[[0, 0]]):
     """

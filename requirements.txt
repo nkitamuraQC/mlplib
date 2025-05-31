@@ -1,6 +1,9 @@
 numpy
 scipy
 ase
+csp-cryspy 
+dscribe 
+physbo
 fairchem-core
 pymatgen
 pandas
@@ -14,3 +17,4 @@ torch-sparse
 phonopy
 phono3py
 matplotlib
+# seekpath

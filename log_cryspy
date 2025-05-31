@@ -1,0 +1,73 @@
+[2025-05-31 21:31:14,530][cryspy_init][INFO] 
+
+
+Start CrySPY 1.3.0
+
+
+[2025-05-31 21:31:14,530][cryspy_init][INFO] # ---------- Library version info
+[2025-05-31 21:31:14,530][cryspy_init][INFO] pandas version: 2.2.3
+[2025-05-31 21:31:14,530][cryspy_init][INFO] pymatgen version: 2024.8.9
+[2025-05-31 21:31:14,530][cryspy_init][INFO] pyxtal version: 1.0.8
+[2025-05-31 21:31:14,530][cryspy_init][INFO] # ---------- Read input file, cryspy.in
+[2025-05-31 21:31:14,531][write_input][INFO] [basic]
+[2025-05-31 21:31:14,531][write_input][INFO] algo = RS
+[2025-05-31 21:31:14,531][write_input][INFO] calc_code = ASE
+[2025-05-31 21:31:14,531][write_input][INFO] tot_struc = 5
+[2025-05-31 21:31:14,531][write_input][INFO] nstage = 1
+[2025-05-31 21:31:14,531][write_input][INFO] njob = 5
+[2025-05-31 21:31:14,531][write_input][INFO] jobcmd = zsh
+[2025-05-31 21:31:14,531][write_input][INFO] jobfile = job_cryspy
+[2025-05-31 21:31:14,531][write_input][INFO] 
+[2025-05-31 21:31:14,531][write_input][INFO] [structure]
+[2025-05-31 21:31:14,531][write_input][INFO] struc_mode = crystal
+[2025-05-31 21:31:14,531][write_input][INFO] natot = 3
+[2025-05-31 21:31:14,531][write_input][INFO] atype = ('Bi', 'Ti', 'F')
+[2025-05-31 21:31:14,531][write_input][INFO] nat = (1, 1, 1)
+[2025-05-31 21:31:14,531][write_input][INFO] mindist_factor = 1.0
+[2025-05-31 21:31:14,531][write_input][INFO] vol_factor = 1.1
+[2025-05-31 21:31:14,531][write_input][INFO] symprec = 0.01
+[2025-05-31 21:31:14,531][write_input][INFO] spgnum = all
+[2025-05-31 21:31:14,531][write_input][INFO] use_find_wy = False
+[2025-05-31 21:31:14,531][write_input][INFO] 
+[2025-05-31 21:31:14,531][write_input][INFO] [option]
+[2025-05-31 21:31:14,531][write_input][INFO] stop_chkpt = 0
+[2025-05-31 21:31:14,531][write_input][INFO] load_struc_flag = False
+[2025-05-31 21:31:14,531][write_input][INFO] stop_next_struc = False
+[2025-05-31 21:31:14,531][write_input][INFO] append_struc_ea = False
+[2025-05-31 21:31:14,531][write_input][INFO] energy_step_flag = False
+[2025-05-31 21:31:14,531][write_input][INFO] struc_step_flag = False
+[2025-05-31 21:31:14,531][write_input][INFO] force_step_flag = False
+[2025-05-31 21:31:14,531][write_input][INFO] stress_step_flag = False
+[2025-05-31 21:31:14,531][write_input][INFO] 
+[2025-05-31 21:31:14,531][write_input][INFO] [ASE]
+[2025-05-31 21:31:14,532][write_input][INFO] kpt_flag = False
+[2025-05-31 21:31:14,532][write_input][INFO] force_gamma = False
+[2025-05-31 21:31:14,532][write_input][INFO] ase_python = ase_in.py
+[2025-05-31 21:31:14,532][rs_gen][INFO] # ---------- Initial structure generation
+[2025-05-31 21:31:14,532][rs_gen][INFO] # ------ mindist
+[2025-05-31 21:31:14,534][struc_util][INFO] Bi - Bi: 1.48
+[2025-05-31 21:31:14,534][struc_util][INFO] Bi - Ti: 1.54
+[2025-05-31 21:31:14,534][struc_util][INFO] Bi - F: 1.025
+[2025-05-31 21:31:14,534][struc_util][INFO] Ti - Ti: 1.6
+[2025-05-31 21:31:14,534][struc_util][INFO] Ti - F: 1.085
+[2025-05-31 21:31:14,534][struc_util][INFO] F - F: 0.57
+[2025-05-31 21:31:14,534][rs_gen][INFO] # ------ generate structures
+[2025-05-31 21:31:14,834][gen_pyxtal][INFO] Structure ID      0: (1, 1, 1) Space group:   2 -->   2 P-1
+[2025-05-31 21:31:14,881][gen_pyxtal][INFO] Structure ID      1: (1, 1, 1) Space group:  89 --> 123 P4/mmm
+[2025-05-31 21:31:14,904][gen_pyxtal][INFO] Structure ID      2: (1, 1, 1) Space group:  99 -->  99 P4mm
+[2025-05-31 21:31:14,917][gen_pyxtal][INFO] Structure ID      3: (1, 1, 1) Space group:  99 -->  99 P4mm
+[2025-05-31 21:31:14,944][gen_pyxtal][INFO] Structure ID      4: (1, 1, 1) Space group:  75 -->  99 P4mm
+[2025-05-31 21:31:20,311][cryspy_init][INFO] Elapsed time for structure generation: 0:00:05.778758
+[2025-05-31 21:31:25,990][cryspy_restart][INFO] 
+
+
+Restart CrySPY 1.3.0
+
+
+[2025-05-31 21:31:25,990][cryspy_restart][INFO] read input, cryspy.in
+[2025-05-31 21:31:25,994][ctrl_job][INFO] # ---------- job status
+[2025-05-31 21:31:26,533][ctrl_job][INFO] ID      0: submit job, Stage 1
+[2025-05-31 21:31:26,540][ctrl_job][INFO] ID      1: submit job, Stage 1
+[2025-05-31 21:31:26,548][ctrl_job][INFO] ID      2: submit job, Stage 1
+[2025-05-31 21:31:26,559][ctrl_job][INFO] ID      3: submit job, Stage 1
+[2025-05-31 21:31:26,569][ctrl_job][INFO] ID      4: submit job, Stage 1

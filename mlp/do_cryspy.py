@@ -81,9 +81,9 @@ class DoCryspy:
             self.prefix = self.qe_ctrl.prefix
         self.algo = "RS"
         self.calc_code = "ASE"
-        self.tot_struc = 10
+        self.tot_struc = 5
         self.nstage = 1
-        self.njob = 2
+        self.njob = 5
         self.jobcmd = "zsh"
         self.jobfile = "job_cryspy"
 
@@ -129,7 +129,7 @@ class DoCryspy:
         return txt
 
     def write_mlp(self):
-        from becmlp.mlp.script import script
+        from mlplib.mlp.script import script
         for i in range(1, self.max_job+1):
             if not os.path.exists(f"./calc_in/{self.ase_python}_{i}"):
                 break

@@ -1,0 +1,6 @@
+   Spg_num Spg_sym  Spg_num_opt Spg_sym_opt  E_eV_atom  Magmom      Opt
+0      123  P4/mmm            0        None        NaN     NaN  no_file
+1      183    P6mm            0        None        NaN     NaN  no_file
+2      187   P-6m2            0        None        NaN     NaN  no_file
+3        3      P2            0        None        NaN     NaN  no_file
+4      183    P6mm            0        None        NaN     NaN  no_file

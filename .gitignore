@@ -7,6 +7,11 @@ __pycache__/
 *.so
 .DS_Store
 *.pt
+*.in
+*.static
+err_cryspy
+./calc_in
+./data
 # Distribution / packaging
 .Python
 build/

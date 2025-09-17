@@ -58,3 +58,25 @@ class EquiformerWithStress(Calculator):
         self.results['energy'] = energy
         self.results['forces'] = forces
         self.results['stress'] = stress
+
+
+
+class Equiformer(Calculator):
+    implemented_properties = ['energy', 'forces']
+
+    def __init__(self, ocp_calculator, stress_func=None, **kwargs):
+        super().__init__(**kwargs)
+        self.ocp_calc = ocp_calculator
+
+    def calculate(self, atoms=None, properties=['energy', 'forces'], system_changes=all_changes):
+        super().calculate(atoms, properties, system_changes)
+
+        # OCPCalculatorでエネルギーと力を取得
+        self.ocp_calc.calculate(atoms, properties, system_changes)
+        energy = self.ocp_calc.results['energy']
+        forces = self.ocp_calc.results['forces']
+
+
+        # 保存
+        self.results['energy'] = energy
+        self.results['forces'] = forces

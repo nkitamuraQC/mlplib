@@ -69,7 +69,7 @@ class PhononCalculator:
         """
         Calculate phonons using the provided crystal structure and supercell matrix.
         """
-        if not use_ph3:
+        if not self.use_ph3:
             self.phonon = Phonopy(self.structure[0], self.supercell_matrix)
         else:
             self.phonon = Phono3py(
@@ -94,20 +94,20 @@ class PhononCalculator:
             e = self.ase_atoms.get_potential_energy()
             forces = self.ase_atoms.get_forces()
             stress = self.ase_atoms.get_stress()
-            print("Energy:", e)
-            print("Forces:", forces)
-            print("Stress:", stress)
+            # print("Energy:", e)
+            # print("Forces:", forces)
+            # print("Stress:", stress)
             self.forces_save.append(forces)
 
         # self.arrange_forces(forces)
         self.phonon.forces = self.forces_save
         self.phonon.dataset = self.phonon.displacement_dataset
-        if not use_ph3:
+        if not self.use_ph3:
             self.phonon.produce_force_constants()
         else:
             self.phonon.produce_fc3()
         self.phonon.save(filename=self.phonopy_save, settings={'force_constants': True})
-        return
+        return self.phonon.force_constants
 
     def get_phonon_band_structure(self, path:list[list[float]], labels:list[str], mesh:list[int]):
         """
@@ -133,7 +133,7 @@ class PhononCalculator:
         return 
 
     def get_phph_int(self):
-        if not use_ph3:
+        if not self.use_ph3:
             raise NotImplementedError
         self.phonon.init_phph_interaction()
         self.phonon.run_thermal_conductivity()

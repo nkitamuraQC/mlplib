@@ -10,9 +10,13 @@ __pycache__/
 *.in
 *.stat
 err_cryspy
+log_cryspy
 calc_in/
 data/
 input/
+work/
+*.traj
+*.cif
 # Distribution / packaging
 .Python
 build/

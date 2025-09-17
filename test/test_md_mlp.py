@@ -1,10 +1,22 @@
-from becmlp.mlp import run_mlp_md
-from mlplib.mlp.phonon import PhononCalculator
+from mlp.mlp_opt import MLPOpt
+from mlp.phonon import PhononCalculator
+from mlp import *
 
 
 def test_run_mlp_opt():
     cifname = "./input/FeSe_mp-20120_primitive.cif"
-    run_mlp_md(cifname, nstep=150, press=0, temp=1000000000)
+    mlp = MLPOpt(cifname)
+    mlp.run_opt()
+
+    run_mlp_opt(cifname)
+    return
+
+def test_run_mlp_md():
+    cifname = "./input/FeSe_mp-20120_primitive.cif"
+    mlp = MLPOpt(cifname)
+    mlp.run_md()
+
+    run_mlp_md(cifname)
     return
 
 def test_run_mlp_phonon():
@@ -14,6 +26,8 @@ def test_run_mlp_phonon():
     return
 
 if __name__ == "__main__":
-    # test_run_mlp_opt()
+    test_run_mlp_opt()
+    test_run_mlp_md()
     test_run_mlp_phonon()
+    print("All Passed")
     

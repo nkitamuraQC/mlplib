@@ -3,13 +3,23 @@ from phonopy.structure.atoms import PhonopyAtoms
 from phonopy.interface.calculator import read_crystal_structure
 import numpy as np
 from ase import Atoms
-from mlplib.mlp.make_calc import get_mlp_calculator, EquiformerWithStress
+from mlp.make_calc import get_mlp_calculator, EquiformerWithStress
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from ase.io import read, write
 from phono3py import Phono3py
 
 class PhononCalculator:
+    """
+    構造ファイルとフォース定数を用いてフォノン計算を行うクラス。
+    構造の読み込み、フォノンの計算、バンド構造・熱伝導率の取得などを担当。
+    """
     def __init__(self, structure_file, force_constants=None):
+        """
+        インスタンス生成時に構造ファイルを読み込み、初期設定を行う。
+        Args:
+            structure_file (str): 構造ファイルのパス（例: POSCAR）
+            force_constants (np.ndarray, optional): フォース定数
+        """
         """
         Initialize the PhononCalculator with a crystal structure and supercell matrix.
 
@@ -36,6 +46,13 @@ class PhononCalculator:
         self.phonopy_save = "phonopy_params.yaml"
 
     def arrange_forces(self, forces):
+        """
+        supercellごとのフォース配列を整形する。
+        Args:
+            forces (np.ndarray): フォース配列
+        Returns:
+            None
+        """
         cumsum = np.cumsum(self.len_supercell)
         for i in range(len(self.len_supercell)):
             if i == 0:
@@ -46,6 +63,13 @@ class PhononCalculator:
     
     def load(self, phonopy_save):
         """
+        保存済みのPhonopyデータをロードする。
+        Args:
+            phonopy_save (str): 保存ファイルのパス
+        Returns:
+            None
+        """
+        """
         Load phonon data from a saved file.
 
         :param phonopy_save: Path to the saved phonon data file.
@@ -53,19 +77,13 @@ class PhononCalculator:
         self.phonon = Phonopy.load(phonopy_save)
         return
 
-    def load_ph3(self, phonopy_save):
-        from phono3py.interface.phono3py_yaml import Phono3pyYaml
-        ph3yml = Phono3pyYaml()
-        ph3yml.read("phono3py_disp.yaml")
-        disp_dataset = ph3yml.dataset
-        ph3 = Phono3py(unitcell, supercell_matrix=ph3yml.supercell_matrix, primitive_matrix=ph3yml.primitive_matrix)
-        forces = np.loadtxt("FORCES_FC3").reshape(-1, len(ph3.supercell), 3)
-        ph3.dataset = disp_dataset
-        ph3.forces = forces
-        self.phonon = ph3
-        return
 
     def calculate_phonons(self):
+        """
+        構造とsupercell行列を用いてフォノン計算を実行。
+        Returns:
+            np.ndarray: フォース定数
+        """
         """
         Calculate phonons using the provided crystal structure and supercell matrix.
         """
@@ -111,6 +129,15 @@ class PhononCalculator:
 
     def get_phonon_band_structure(self, path:list[list[float]], labels:list[str], mesh:list[int]):
         """
+        指定した経路に沿ったフォノンバンド構造を取得・プロットする。
+        Args:
+            path (list[list[float]]): q点の経路
+            labels (list[str]): 経路ラベル
+            mesh (list[int]): メッシュサイズ
+        Returns:
+            None
+        """
+        """
         Get the phonon band structure along a specified path in reciprocal space.
 
         :param qpoints: List of q-points along the path.
@@ -133,6 +160,11 @@ class PhononCalculator:
         return 
 
     def get_phph_int(self):
+        """
+        フォノン-フォノン相互作用と熱伝導率を計算（Phono3py使用時のみ）。
+        Returns:
+            None
+        """
         if not self.use_ph3:
             raise NotImplementedError
         self.phonon.init_phph_interaction()

@@ -5,10 +5,17 @@ from pymatgen.core import Structure
 import periodictable
 import numpy as np
 import pathlib
-from mlplib.mlp.job_cryspy import script_qe, script_mlp
+from mlp.job_cryspy import script_qe, script_mlp
 
 
 def get_section(myclass):
+    """
+    DoCryspyクラスのインスタンスから入力ファイルのセクション情報を生成。
+    Args:
+        myclass (DoCryspy): 設定情報を持つインスタンス
+    Returns:
+        dict: セクションごとのパラメータリスト
+    """
     section_base = {
         "[basic]": [
             "algo",
@@ -74,7 +81,16 @@ def get_section(myclass):
 
 
 class DoCryspy:
+    """
+    CrySPY用の入力ファイル生成・ジョブ管理を行うクラス。
+    QE/ASE/MLPの各種設定・ファイル出力・実行制御を担当。
+    """
     def __init__(self, qe_ctrl=None):
+        """
+        DoCryspyインスタンスの初期化。
+        Args:
+            qe_ctrl: Quantum ESPRESSO制御用オブジェクト（任意）
+        """
         self.qe_ctrl = qe_ctrl
         self.prefix = None
         if qe_ctrl is not None:
@@ -119,6 +135,13 @@ class DoCryspy:
     
 
     def make_cryspy(self, txt=""):
+        """
+        CrySPY用の入力ファイル内容を生成。
+        Args:
+            txt (str): 既存テキスト（省略可）
+        Returns:
+            str: 入力ファイル内容
+        """
         self.section = get_section(self)
         for key in self.section:
             txt += key + "\n"
@@ -129,6 +152,11 @@ class DoCryspy:
         return txt
 
     def write_mlp(self):
+        """
+        MLP用のPythonスクリプト・ジョブファイルを出力。
+        Returns:
+            None
+        """
         from mlplib.mlp.script import script
         for i in range(1, self.max_job+1):
             if not os.path.exists(f"./calc_in/{self.ase_python}_{i}"):
@@ -144,12 +172,24 @@ class DoCryspy:
         return
 
     def write_cryspy(self, inp):
+        """
+        CrySPY用の入力ファイル（cryspy.in）を出力。
+        Args:
+            inp (str): 入力内容
+        Returns:
+            None
+        """
         wf = open("cryspy.in", "w")
         wf.write(inp)
         wf.close()
         return
     
     def write_job_cryspy(self):
+        """
+        Quantum ESPRESSO用ジョブファイルを出力。
+        Returns:
+            None
+        """
         wf = open(f"./calc_in/{self.jobfile}", "w")
         wf.write(script_qe.format(mpi=self.mpi,prefix=self.prefix))
         wf.close()
@@ -157,6 +197,11 @@ class DoCryspy:
 
     
     def write_qe(self):
+        """
+        Quantum ESPRESSO入力ファイル（relax/vc-relax）を出力。
+        Returns:
+            None
+        """
         self.qe_ctrl.calculation = "relax"
         inp = self.qe_ctrl.make_input_for_cryspy()
         self.qe_ctrl.write_input4cryspy(inp, 1)
@@ -167,6 +212,11 @@ class DoCryspy:
         return
 
     def exec_qe(self):
+        """
+        QE計算のCrySPYワークフローを実行。
+        Returns:
+            None
+        """
         pathlib.Path("calc_in").mkdir(exist_ok=True)
         inp = self.make_cryspy()
         self.write_cryspy(inp)
@@ -176,6 +226,11 @@ class DoCryspy:
         return
 
     def exec_mlp(self):
+        """
+        MLP計算のCrySPYワークフローを実行。
+        Returns:
+            None
+        """
         pathlib.Path("calc_in").mkdir(exist_ok=True)
         inp = self.make_cryspy()
         self.write_cryspy(inp)
@@ -185,6 +240,11 @@ class DoCryspy:
         return
     
     def rm_lock(self):
+        """
+        CrySPY関連のロック・ログ・データを削除。
+        Returns:
+            None
+        """
         if os.path.exists("lock_cryspy"):
             os.remove("lock_cryspy")
         if os.path.exists("log_cryspy"):
@@ -196,19 +256,54 @@ class DoCryspy:
         return
 
     def __len__(self):
+        """
+        インスタンスの属性数を返す。
+        Returns:
+            int: 属性数
+        """
         return len(self.__dict__)
 
     def __repr__(self):
+        """
+        インスタンスの属性情報を文字列で返す。
+        Returns:
+            str: 属性情報
+        """
         return str(self.__dict__)
 
     def __str__(self):
+        """
+        インスタンスの属性情報を文字列で返す。
+        Returns:
+            str: 属性情報
+        """
         return str(self.__dict__)
 
     def __iter__(self):
+        """
+        属性辞書のイテレータを返す。
+        Returns:
+            イテレータ
+        """
         return self.__dict__.iteritems()
 
     def __getitem__(self, key):
+        """
+        属性辞書からkeyで値を取得。
+        Args:
+            key: キー
+        Returns:
+            値
+        """
         return self.__dict__[key]
 
     def __setitem__(self, key, value):
+        """
+        属性辞書にkeyで値を設定。
+        Args:
+            key: キー
+            value: 設定値
+        Returns:
+            None
+        """
         self.__dict__[key] = value

@@ -19,7 +19,6 @@ conda create -n mlplib_env python=3.9
 conda activate mlplib_env
 git clone https://github.com/nkitamuraQC/mlplib.git
 cd mlplib
+pip install -e .
 pip install -r requirements.txt
 ```
-- Optional
-  - Setting of PYTHONPATH 

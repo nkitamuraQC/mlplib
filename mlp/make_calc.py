@@ -4,6 +4,11 @@ import numpy as np
 from ase import Atoms
 
 def get_mlp_calculator():
+    """
+    EquiformerV2-31M-S2EF-OC20-All+MDモデルのOCPCalculatorインスタンスを返す。
+    Returns:
+        OCPCalculator: 機械学習ポテンシャル計算機
+    """
     calc = OCPCalculator(
         model_name="EquiformerV2-31M-S2EF-OC20-All+MD",
         local_cache="pretrained_models",
@@ -13,14 +18,12 @@ def get_mlp_calculator():
 
 def compute_virial_stress_from_ase(atoms: Atoms, forces: np.ndarray) -> np.ndarray:
     """
-    ASEのAtomsオブジェクトとforcesからVirial stress tensorを計算する
-
-    Parameters:
-        atoms: ASE Atoms オブジェクト
-        forces: (N, 3) numpy array of atomic forces [eV/Å]
-
+    ASEのAtomsオブジェクトとフォースからVirial stress tensor（応力テンソル）を計算。
+    Args:
+        atoms (ase.Atoms): 原子構造
+        forces (np.ndarray): 原子ごとのフォース
     Returns:
-        stress_tensor: (3, 3) numpy array of stress tensor [eV/Å^3]
+        np.ndarray: 応力テンソル（3x3）
     """
     positions = atoms.get_positions()  # shape: (N, 3)
     volume = atoms.get_volume()
@@ -33,6 +36,10 @@ def compute_virial_stress_from_ase(atoms: Atoms, forces: np.ndarray) -> np.ndarr
     return stress_tensor
 
 class EquiformerWithStress(Calculator):
+    """
+    エネルギー・フォース・応力を返すEquiformerラッパークラス。
+    OCPCalculatorとVirial stress計算を組み合わせて利用。
+    """
     implemented_properties = ['energy', 'forces', 'stress']
 
     def __init__(self, ocp_calculator, stress_func=None, **kwargs):
@@ -62,6 +69,10 @@ class EquiformerWithStress(Calculator):
 
 
 class Equiformer(Calculator):
+    """
+    エネルギー・フォースのみ返すEquiformerラッパークラス。
+    OCPCalculatorをラップして利用。
+    """
     implemented_properties = ['energy', 'forces']
 
     def __init__(self, ocp_calculator, stress_func=None, **kwargs):

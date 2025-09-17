@@ -1,4 +1,4 @@
-from mlplib.mlp.make_calc import get_mlp_calculator, EquiformerWithStress, compute_virial_stress_from_ase
+from mlp.make_calc import get_mlp_calculator, EquiformerWithStress, compute_virial_stress_from_ase
 from ase.io import read, write
 import numpy as np
 from scipy.optimize import minimize
@@ -8,16 +8,31 @@ from ase import Atoms
 from ase.io import Trajectory
 
 class MLPOpt:
+    """
+    機械学習ポテンシャル（MLP）を用いた構造最適化・分子動力学（MD）計算を行うクラス。
+    CIFファイルの読み込み、計算実行、結果出力などを担当。
+    """
     def __init__(
-            self, 
-            cifname: str, 
-            nstep=10, 
-            press=0, 
-            conv_thr_force=1e-2, 
-            conv_thr_stress=1e-5,
-            conv_thr=1e-5,
-            temp=100
-        ):
+        self, 
+        cifname: str, 
+        nstep=10, 
+        press=0, 
+        conv_thr_force=1e-2, 
+        conv_thr_stress=1e-5,
+        conv_thr=1e-5,
+        temp=100
+    ):
+        """
+        インスタンス生成時に各種パラメータを初期化。
+        Args:
+            cifname (str): CIFファイル名
+            nstep (int): 計算ステップ数
+            press (float): 圧力（GPa）
+            conv_thr_force (float): 力の収束閾値
+            conv_thr_stress (float): 応力の収束閾値
+            conv_thr (float): 収束閾値
+            temp (float): 温度（K）
+        """
         self.cifname = cifname
         self.nstep = nstep
         self.press = press / 160.21766208 # GPa->eV/ang^3
@@ -38,34 +53,63 @@ class MLPOpt:
         self.traj = Trajectory('output.traj', 'w')
 
     def read_cif(self):
+        """
+        CIFファイルを読み込み、Atomsオブジェクトを生成。
+        Returns:
+            None
+        """
         self.atoms = read(self.cifname)
         self.natoms = len(self.atoms)
         return 
     
     def assin_calc(self):
+        """
+        AtomsオブジェクトにMLP計算機を割り当て。
+        Returns:
+            None
+        """
         self.atoms.calc = get_mlp_calculator()
         return
     
     def write_cif(self, atoms):
+        """
+        最適化後の構造をCIFファイルとして保存。
+        Args:
+            atoms (ase.Atoms): 構造データ
+        Returns:
+            None
+        """
         atoms.write(self.output_cif, format='cif')
         return
 
     def get_props(self):
+        """
+        ポテンシャルエネルギー・フォース・応力テンソルを取得し表示。
+        Returns:
+            energy (float): ポテンシャルエネルギー
+            forces (np.ndarray): フォース
+            stress (np.ndarray): 応力テンソル
+        """
         self.read_cif()
         self.assin_calc()
-        energy = atoms.get_potential_energy()
+        energy = self.atoms.get_potential_energy()
         print(f'Potential energy: {energy:.6f} eV')
 
         # 原子ごとのフォース（N原子 x 3成分）
-        forces = atoms.get_forces()
+        forces = self.atoms.get_forces()
         print(f'Forces:\n{forces}')
 
         # 応力テンソル（3x3 行列）単位：eV/Å^3
-        stress = atoms.get_stress(voigt=False)
+        stress = self.atoms.get_stress(voigt=False)
         print(f'Stress tensor (3x3):\n{stress}')
         return energy, forces, stress
     
     def initialize_velocities(self):
+        """
+        原子の質量と温度から初期速度を生成。
+        Returns:
+            None
+        """
         masses_me = self.atoms.get_masses() * self.amu_to_me
         velocities = []
         for m in masses_me:
@@ -79,6 +123,15 @@ class MLPOpt:
         return
     
     def update_md(self, timestep_atoms=0.1, timestep_lattice=0.1):
+        """
+        1ステップ分のMD計算（位置・速度・セルの更新）。
+        Args:
+            timestep_atoms (float): 原子座標のタイムステップ
+            timestep_lattice (float): セルのタイムステップ
+        Returns:
+            f_norm (float): フォースノルム
+            s_norm (float): 応力ノルム
+        """
         if self.velocities is None:
             self.initialize_velocities()
 
@@ -120,6 +173,14 @@ class MLPOpt:
     
     
     def run_md(self, timestep_atoms=0.1, timestep_lattice=0.1):
+        """
+        分子動力学（MD）計算を指定ステップ数だけ実行。
+        Args:
+            timestep_atoms (float): 原子座標のタイムステップ
+            timestep_lattice (float): セルのタイムステップ
+        Returns:
+            None
+        """
         self.read_cif()
         self.assin_calc()
         for i in range(self.nstep):
@@ -131,6 +192,15 @@ class MLPOpt:
     
     
     def run_opt(self, fmax=0.05, dt=0.1, maxstep=0.05):
+        """
+        FIRE法による構造最適化を実行。
+        Args:
+            fmax (float): 力収束閾値
+            dt (float): タイムステップ
+            maxstep (float): 1ステップの最大変位
+        Returns:
+            None
+        """
         self.read_cif()
         ocp = get_mlp_calculator()
         self.atoms.calc = EquiformerWithStress(ocp)

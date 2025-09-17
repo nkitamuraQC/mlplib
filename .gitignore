@@ -8,10 +8,10 @@ __pycache__/
 .DS_Store
 *.pt
 *.in
-*.static
+*.stat
 err_cryspy
-./calc_in
-./data
+calc_in/
+data/
 # Distribution / packaging
 .Python
 build/

@@ -12,6 +12,7 @@ __pycache__/
 err_cryspy
 calc_in/
 data/
+input/
 # Distribution / packaging
 .Python
 build/

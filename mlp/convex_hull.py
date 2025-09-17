@@ -54,15 +54,16 @@ class ConvexHullCalculator:
         plt.show()
 
 
-hull_calc = ConvexHullCalculator()
-
-# サンプル構造を追加（構造ごとの A原子数, B原子数, エネルギー）
-hull_calc.add_structure(a_count=1, b_count=1, total_energy=-5.2)   # AB
-hull_calc.add_structure(a_count=2, b_count=1, total_energy=-7.7)   # A2B
-hull_calc.add_structure(a_count=1, b_count=2, total_energy=-7.3)   # AB2
-hull_calc.add_structure(a_count=3, b_count=1, total_energy=-9.8)   # A3B
-hull_calc.add_structure(a_count=1, b_count=3, total_energy=-9.0)   # AB3
-
-# 凸包の計算とプロット
-hull_calc.compute_hull()
-hull_calc.plot_hull()
+if __name__ == "__main__":
+    hull_calc = ConvexHullCalculator()
+    
+    # サンプル構造を追加（構造ごとの A原子数, B原子数, エネルギー）
+    hull_calc.add_structure(a_count=1, b_count=1, total_energy=-5.2)   # AB
+    hull_calc.add_structure(a_count=2, b_count=1, total_energy=-7.7)   # A2B
+    hull_calc.add_structure(a_count=1, b_count=2, total_energy=-7.3)   # AB2
+    hull_calc.add_structure(a_count=3, b_count=1, total_energy=-9.8)   # A3B
+    hull_calc.add_structure(a_count=1, b_count=3, total_energy=-9.0)   # AB3
+    
+    # 凸包の計算とプロット
+    hull_calc.compute_hull()
+    hull_calc.plot_hull()
